@@ -1,0 +1,131 @@
+# name: Deploy Application
+
+# on:
+#   push:
+#     branches: [main, develop]
+#     paths:
+#       - 'src/**'
+#       - '.github/workflows/deploy-app.yml'
+#   workflow_dispatch:
+#     inputs:
+#       environment:
+#         description: 'Environment to deploy to'
+#         required: true
+#         type: choice
+#         options:
+#           - dev
+#           - prod
+
+
+# env:
+#   AWS_REGION: eu-west-2
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     permissions:
+#       id-token: write
+#       contents: read
+    
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+
+#       - name: Determine environment
+#         id: env
+#         run: |
+#           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+#             ENV="${{ github.event.inputs.environment }}"
+#           elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+#             ENV="prod"
+#           else
+#             ENV="dev"
+#           fi
+#           echo "environment=${ENV}" >> $GITHUB_OUTPUT
+#           echo "Deploying to: ${ENV}"
+      
+      
+#       - name: Configure AWS credentials
+#         uses: aws-actions/configure-aws-credentials@v4
+#         with:
+#           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+#           aws-region: ${{ env.AWS_REGION }}
+      
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: '20'
+#           cache: 'npm'
+#           cache-dependency-path: 'src/package.json'
+      
+#       - name: Install dependencies
+#         working-directory: ./src
+#         run: npm ci --production
+      
+#       - name: Run tests
+#         working-directory: ./src
+#         run: npm test
+      
+#       - name: Package Lambda function
+#         run: |
+#           cd src
+#           zip -r ../deployment.zip . -x "*.git*" -x "node_modules/aws-sdk/*"
+#           cd ..
+#           ls -lh deployment.zip
+      
+#       - name: Get artifacts bucket name
+#         id: bucket
+#         run: |
+#           BUCKET=$(aws s3api list-buckets \
+#             --query "Buckets[?starts_with(Name, 'node-api-${{ steps.env.outputs.environment }}-lambda-artifacts')].Name" \
+#             --output text)
+#           echo "name=${BUCKET}" >> $GITHUB_OUTPUT
+#           echo "Using bucket: ${BUCKET}"
+      
+#       - name: Upload to S3
+#         run: |
+#           aws s3 cp deployment.zip \
+#             s3://${{ steps.bucket.outputs.name }}/lambda/deployment.zip \
+#             --metadata "git-commit=${{ github.sha }},git-branch=${{ github.ref_name }},deployed-by=github-actions"
+          
+#           echo "Uploaded deployment package to S3"
+      
+#       - name: Update Lambda function code
+#         id: update-lambda
+#         run: |
+#           FUNCTION_NAME="node-api-${{ steps.env.outputs.environment }}-api"
+          
+#           echo "Updating Lambda function: ${FUNCTION_NAME}"
+          
+#           aws lambda update-function-code \
+#             --function-name ${FUNCTION_NAME} \
+#             --s3-bucket ${{ steps.bucket.outputs.name }} \
+#             --s3-key handlers/deployment.zip \
+#             --publish
+          
+#           echo "Waiting for function update to complete..."
+#           aws lambda wait function-updated \
+#             --function-name ${FUNCTION_NAME}
+          
+#           VERSION=$(aws lambda get-function \
+#             --function-name ${FUNCTION_NAME} \
+#             --query 'Configuration.Version' \
+#             --output text)
+          
+#           echo "version=${VERSION}" >> $GITHUB_OUTPUT
+#           echo "Lambda updated to version: ${VERSION}"
+      
+#       - name: Get API endpoint
+#         id: api
+#         run: |
+#           API_ID=$(aws apigatewayv2 get-apis \
+#             --query "Items[?Name=='node-api-${{ steps.env.outputs.environment }}-api'].ApiId" \
+#             --output text)
+          
+#           ENDPOINT=$(aws apigatewayv2 get-api \
+#             --api-id ${API_ID} \
+#             --query 'ApiEndpoint' \
+#             --output text)
+          
+#           echo "endpoint=${ENDPOINT}" >> $GITHUB_OUTPUT
+ 

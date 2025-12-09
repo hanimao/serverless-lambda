@@ -1,0 +1,11 @@
+{
+  "name": "node-api",
+  "version": "1.0.0",
+  "main": "index.handler",
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.490.0",
+    "aws-sdk": "^2.1692.0",
+    "mssql": "^12.2.0",
+    "tedious": "^16.6.1"
+  }
+}
