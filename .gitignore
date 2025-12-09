@@ -8,3 +8,6 @@ node_modules/
 **/*.tfstate.backup
 .terraform/
 .terraform.lock.hcl
+*.tfvars
+*.tfvars.json
+*.tfplan
