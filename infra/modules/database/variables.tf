@@ -16,9 +16,9 @@ variable "private_subnet_ids" {
   type = list(string)
 }
 
-variable "database_name" {
-  type = string
-}
+# variable "database_name" {
+#   type = string
+# }
 
 variable "master_username" {
   type    = string

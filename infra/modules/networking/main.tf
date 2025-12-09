@@ -54,35 +54,3 @@ resource "aws_route_table_association" "private-b" {
 
 
 
-resource "aws_vpc_endpoint" "main" {
-  vpc_id             = aws_vpc.main.id
-  vpc_endpoint_id    = "interface"
-  subnet_ids         = ["aws_subnet.private.id", "aws_subnet-private-b.id"]
-  security_group_ids = [module.lambda.security_group_id, module.database.security_group_id]
-  service_name = "com.amazonaws.eu-west-2.secretsmanager"
-
-  tags = {
-    Environment = "dev"
-  }
-}
-
-
-resource "aws_vpc_endpoint_policy" "example" {
-  vpc_endpoint_id = aws_vpc_endpoint.main.id
-  policy = jsonencode({
-    "Version" : "2012-10-17",
-    "Statement" : [
-      {
-        "Sid" : "AllowAll",
-        "Effect" : "Allow",
-        "Principal" : {
-          "AWS" : "*"
-        },
-        "Action" : [
-          "dynamodb:*"
-        ],
-        "Resource" : "*"
-      }
-    ]
-  })
-}

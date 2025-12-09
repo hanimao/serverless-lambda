@@ -39,9 +39,6 @@ variable "db_port" {
   default = 1433
 }
 
-variable "db_name" {
-  type = string
-}
 
 variable "db_secret_arn" {
   type      = string

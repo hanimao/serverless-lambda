@@ -1,9 +1,8 @@
-project_name               = "node-api"
-environment                = "dev"
-aws_region                 = "eu-west-2"
-db_name                    = "master"
-db_master_username         = "sqladmin"
-db_instance_class          = "db.t3.medium"
-db_engine_version          = "15.00"
-memory_size                = 512
-log_retention_days         = 7
+project_name       = "node-api"
+environment        = "dev"
+aws_region         = "eu-west-2"
+db_master_username = "sqladmin"
+db_instance_class  = "db.t3.medium"
+db_engine_version  = "15.00"
+memory_size        = 512
+log_retention_days = 7

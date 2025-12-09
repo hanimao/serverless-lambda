@@ -1,5 +1,3 @@
-# creates your s3 bucket for your codee
-
 resource "aws_s3_bucket" "lambda_artifacts" {
   bucket = "${var.project_name}-${var.environment}-lambda-artifacts"
 
@@ -8,7 +6,7 @@ resource "aws_s3_bucket" "lambda_artifacts" {
   })
 }
 
-# Creates an IAM Role for a Lambda function
+
 resource "aws_iam_role" "lambda" {
   name = "${var.project_name}-${var.environment}-lambda-role"
 
@@ -55,8 +53,9 @@ resource "aws_lambda_function" "api" {
   function_name = "${var.project_name}-${var.environment}-api"
   role          = aws_iam_role.lambda.arn
 
-  s3_bucket = aws_s3_bucket.lambda_artifacts.bucket
-  s3_key    = "deployment.zip"
+  filename         = data.archive_file.lambda_zip.output_path
+  source_code_hash = data.archive_file.lambda_zip.output_base64sha256
+
 
   handler     = "index.handler"
   runtime     = "nodejs20.x"
@@ -96,7 +95,7 @@ resource "aws_iam_policy" "lambda_secrets_policy" {
       {
         Effect   = "Allow",
         Action   = ["secretsmanager:GetSecretValue"],
-        Resource = var.db_secret_arn  # must be the full secret ARN
+        Resource = var.db_secret_arn 
       }
     ]
   })
@@ -113,4 +112,19 @@ resource "aws_iam_role_policy_attachment" "lambda_secrets_attach" {
 resource "aws_iam_role_policy_attachment" "lambda_basic" {
   role       = aws_iam_role.lambda.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+
+data "archive_file" "lambda_zip" {
+  type        = "zip"
+  source_dir  = "${path.module}/../../../src/handler"
+  output_path = "${path.module}/../../../src/handler/deployment.zip"
+}
+
+
+resource "aws_s3_object" "main" {
+  bucket = aws_s3_bucket.lambda_artifacts.bucket
+  key    = "deployment.zip"
+  source = data.archive_file.lambda_zip.output_path
+
 }

@@ -14,7 +14,7 @@ variable "db_master_username" {
 
 
 variable "db_allocated_storage" {
-  type = number
+  type    = number
   default = 10
 }
 
@@ -32,6 +32,8 @@ variable "db_instance_class" {
   type = string
 }
 
-variable "db_name" {
-  type = string
+ 
+variable "tags" {
+  type    = map(string)
+  default = {}
 }
