@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "./src/handler"
+      - "src/handler/**"
 
 env:
   AWS_REGION: eu-west-2
