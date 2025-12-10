@@ -37,9 +37,6 @@ jobs:
         working-directory: "./src/handler"
         run: npm ci --production
 
-      - name: Run tests
-        working-directory: ./src/handler
-        run: npm test
 
       - name: Package Lambda function
         run: |

@@ -41,5 +41,5 @@ variable "tags" {
 variable "github_repo" {
   description = "GitHub repository name"
   type        = string
-  default     = "serverless.project"
+  default     = "hanimao/serverless.project:ref:refs/heads/main"
 }
