@@ -91,12 +91,19 @@ jobs:
         id: api
         run: |
           API_ID=$(aws apigatewayv2 get-apis \
-            --query "Items[?Name=='node-api-dev-api'].ApiId" \
+            --query "Items[?Name==\`node-api-dev-api\`].ApiId" \
             --output text)
 
+          if [ -z "$API_ID" ] || [ "$API_ID" == "None" ]; then
+            echo "ERROR: API 'node-api-dev-api' not found."
+            exit 1
+          fi
+
           ENDPOINT=$(aws apigatewayv2 get-api \
-            --api-id ${API_ID} \
+            --api-id "$API_ID" \
             --query 'ApiEndpoint' \
             --output text)
 
           echo "endpoint=${ENDPOINT}" >> $GITHUB_OUTPUT
+          echo "API endpoint: $ENDPOINT"
+
