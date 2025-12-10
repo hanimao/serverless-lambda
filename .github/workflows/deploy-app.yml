@@ -39,8 +39,8 @@ jobs:
 
       - name: Package Lambda function
         run: |
-          cd src
-          zip -r deployment.zip . -x "*.git*" -x "node_modules/aws-sdk/*"
+          cd src/handler
+          zip -r ../../deployment.zip . -x "*.git*" -x "node_modules/aws-sdk/*"
 
       - name: Get artifacts bucket name
         id: bucket
@@ -53,7 +53,7 @@ jobs:
 
       - name: Upload to S3
         run: |
-          cd src
+          cd src/handler
           ls -la
           aws s3 cp deployment.zip \
             s3://${{ steps.bucket.outputs.name }}/deployment.zip \
