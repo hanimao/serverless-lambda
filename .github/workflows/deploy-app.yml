@@ -71,7 +71,7 @@ jobs:
           aws lambda update-function-code \
             --function-name ${FUNCTION_NAME} \
             --s3-bucket ${{ steps.bucket.outputs.name }} \
-            --s3-key lambda/deployment.zip \
+            --s3-key deployment.zip \
             --publish
 
           echo "Waiting for function update to complete..."
