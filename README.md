@@ -17,9 +17,9 @@ This repository deploys a Node.js WebAPI and a SQL Server database on AWS. It al
 
 # Archiecture Diagram 
 
-![architecture diagram](<architecture.drawio.svg>)
+![architecture diagram](<images/architecture.drawio.svg>)
 
-![serverless](/Users/hanimao/Project/app.png)
+![serverless](images/app.png)
 
 
 # Getting Started
