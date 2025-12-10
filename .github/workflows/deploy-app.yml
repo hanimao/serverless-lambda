@@ -2,10 +2,9 @@ name: deploy app
 
 on:
   push:
-    branches: main
+    branches: [main]
     paths:
       - "./src/handler"
-
 
 env:
   AWS_REGION: eu-west-2
@@ -42,7 +41,6 @@ jobs:
         working-directory: ./src/handler
         run: npm test
 
-
       - name: Package Lambda function
         run: |
           cd src
@@ -50,61 +48,58 @@ jobs:
           cd ..
           ls -lh deployment.zip
 
-
-
       - name: Get artifacts bucket name
         id: bucket
         run: |
           BUCKET=$(aws s3api list-buckets \
-            --query "Buckets[?starts_with(Name, 'node-api-${{ steps.env.outputs.environment }}-lambda-artifacts')].Name" \
+            --query "Buckets[?starts_with(Name, 'node-api-dev-lambda-artifacts')].Name" \
             --output text)
           echo "name=${BUCKET}" >> $GITHUB_OUTPUT
           echo "Using bucket: ${BUCKET}"
-      
+
       - name: Upload to S3
         run: |
           aws s3 cp deployment.zip \
             s3://${{ steps.bucket.outputs.name }}/lambda/deployment.zip \
             --metadata "git-commit=${{ github.sha }},git-branch=${{ github.ref_name }},deployed-by=github-actions"
-          
+
           echo "Uploaded deployment package to S3"
-      
+
       - name: Update Lambda function code
         id: update-lambda
         run: |
-          FUNCTION_NAME="node-api-${{ steps.env.outputs.environment }}-api"
-          
+          FUNCTION_NAME="node-api-dev-api"
+
           echo "Updating Lambda function: ${FUNCTION_NAME}"
-          
+
           aws lambda update-function-code \
             --function-name ${FUNCTION_NAME} \
             --s3-bucket ${{ steps.bucket.outputs.name }} \
-            --s3-key handlers/deployment.zip \
+            --s3-key lambda/deployment.zip \
             --publish
-          
+
           echo "Waiting for function update to complete..."
           aws lambda wait function-updated \
             --function-name ${FUNCTION_NAME}
-          
+
           VERSION=$(aws lambda get-function \
             --function-name ${FUNCTION_NAME} \
             --query 'Configuration.Version' \
             --output text)
-          
+
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
           echo "Lambda updated to version: ${VERSION}"
-      
+
       - name: Get API endpoint
         id: api
         run: |
           API_ID=$(aws apigatewayv2 get-apis \
-            --query "Items[?Name=='node-api-${{ steps.env.outputs.environment }}-api'].ApiId" \
+            --query "Items[?Name=='node-api-dev-api'].ApiId" \
             --output text)
-          
+
           ENDPOINT=$(aws apigatewayv2 get-api \
             --api-id ${API_ID} \
             --query 'ApiEndpoint' \
             --output text)
-          
+
           echo "endpoint=${ENDPOINT}" >> $GITHUB_OUTPUT
- 
