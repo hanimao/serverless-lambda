@@ -3,9 +3,8 @@
 1. [Project Overview](#project-overview)
 2. [Architecture Diagram](#architecture-diagram) 
 3. [Getting Started](#getting-started)
-4. [File Structure](#file-structure)
-5. [Terraform Infrastructure](#terraform-infrastructure)
-6. [Services](#services)
+4. [Terraform Infrastructure](#terraform-infrastructure)
+5. [Services](#services)
 
 
 
@@ -66,7 +65,7 @@ zip -r deployment.zip .
 
 # Terraform Infrastructure 
 
-The AWS infrastructure was organised into reusble modules to build the infrastructure and this approach promotes the DRY (Don't Repeat Yourself) principle and makes your code scalable and maintainable. Terraform was used to provision the infrastructure, with the state backend securely hosted on AWS S3, enabling reliable tracking. 
+The AWS infrastructure was organised into reusable modules to build the infrastructure and this approach promotes the DRY (Don't Repeat Yourself) principle and makes your code scalable and maintainable. Terraform was used to provision the infrastructure, with the state backend securely hosted on AWS S3, enabling reliable tracking. 
 
 
 ## Terraform directory 
