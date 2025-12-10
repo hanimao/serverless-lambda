@@ -15,7 +15,7 @@ This repository deploys a Node.js WebAPI and a SQL Server database on AWS. It al
 
 
 
-# Archiecture Diagram 
+# Architecture Diagram 
 
 ![architecture diagram](<images/architecture.drawio.svg>)
 
@@ -45,8 +45,9 @@ Default output format [None]:
 
 ## Clone Repository 
 
-
+```bash
 git clone <repository-url>
+```
 
 
 ## Lambda Deployment zip 
