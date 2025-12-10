@@ -39,10 +39,8 @@ jobs:
 
       - name: Package Lambda function
         run: |
-          cd src
-          zip -r ../deployment.zip . -x "*.git*" -x "node_modules/aws-sdk/*"
-          cd ..
-          ls -lh deployment.zip
+          cd src/handler
+          zip -r deployment.zip . -x "*.git*" -x "node_modules/aws-sdk/*"
 
       - name: Get artifacts bucket name
         id: bucket
