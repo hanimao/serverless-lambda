@@ -21,7 +21,7 @@ exports.handler = async (event) => {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        message: "Hello from Node.js Lambda WebAPI! (test1)",
+        message: "Hello from Node.js Lambda WebAPI! (testing pipeline)",
         time: new Date().toISOString()
       })
     };

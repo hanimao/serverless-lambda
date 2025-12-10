@@ -100,14 +100,21 @@ resource "aws_iam_policy" "github_actions" {
         Action = [
           "s3:ListBucket",
           "s3:GetObject",
-          "s3:PutObject",
-          "s3:DeleteObject"
+          "s3:PutObject"
         ]
         Resource = [
            module.lambda.artifacts_bucket_arn,
           "${module.lambda.artifacts_bucket_arn}/*"
         ]
       },
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:ListAllMyBuckets"        
+        ]
+        Resource = "*"
+      },
+
       {
         Effect = "Allow"
         Action = [
@@ -122,7 +129,7 @@ resource "aws_iam_policy" "github_actions" {
         Action = [
           "apigateway:*",   
         ]
-        Resource = "arn:aws:apigateway:eu-west-2::/apis/${module.api.api_id}/*"
+        Resource = "arn:aws:apigateway:eu-west-2::/apis*"
       }
 
     ]
