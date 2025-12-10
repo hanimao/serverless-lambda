@@ -53,6 +53,8 @@ jobs:
 
       - name: Upload to S3
         run: |
+          cd src
+          ls -la
           aws s3 cp deployment.zip \
             s3://${{ steps.bucket.outputs.name }}/deployment.zip \
             --metadata "git-commit=${{ github.sha }},git-branch=${{ github.ref_name }},deployed-by=github-actions"
