@@ -1,20 +1,14 @@
-output "api_endpoint" {
-  value       = module.api.api_endpoint
-  description = "API Gateway endpoint"
+output "github_actions_role_arn" {
+  description = "IAM role ARN for GitHub Actions"
+  value       = aws_iam_role.github_actions.arn
 }
 
-output "lambda_function_name" {
-  value       = module.lambda.function_name
-  description = "Lambda function name"
+output "oidc_provider_arn" {
+  description = "OIDC provider ARN"
+  value       = aws_iam_openid_connect_provider.github.arn 
 }
 
-output "database_endpoint" {
-  value       = module.database.endpoint
-  description = "RDS database endpoint"
-  sensitive   = true
-}
-
-output "artifacts_bucket" {
-  value       = module.lambda.artifacts_bucket
-  description = "S3 bucket for Lambda artifacts"
+output "oidc_role" {
+  description = "CICD GitHub role."
+  value       = aws_iam_role.github_actions.arn
 }

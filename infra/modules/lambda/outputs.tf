@@ -14,7 +14,7 @@ output "security_group_id" {
   value = aws_security_group.lambda.id
 }
 
-output "artifacts_bucket" {
-  value = aws_s3_bucket.lambda_artifacts.id
+output "artifacts_bucket_arn" {
+  value = aws_s3_bucket.lambda_artifacts.arn
 }
 

@@ -1,0 +1,34 @@
+name: Terraform Destroy
+
+on:
+  workflow_dispatch: 
+
+env:
+  AWS_REGION: eu-west-2
+
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: eu-west-2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3.1.2
+        with:
+          terraform_version: 1.11.1
+
+      - name: Terraform Init
+        working-directory: "./infra"
+        run: terraform init
+
+      - name: Terraform Destroy
+        working-directory: "./infra"
+        run: terraform destroy -auto-approve 

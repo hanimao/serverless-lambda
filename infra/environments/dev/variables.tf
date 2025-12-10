@@ -37,3 +37,9 @@ variable "tags" {
   type    = map(string)
   default = {}
 }
+
+variable "github_repo" {
+  description = "GitHub repository name"
+  type        = string
+  default     = "serverless.project"
+}
