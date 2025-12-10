@@ -109,5 +109,6 @@ serverless/
 - **Amazon RDS (SQL Server)**: A fully managed relational database service used to store the application’s data. The SQL Server instance is provisioned with standard compute (`db.t3.medium`) and includes automated backups, monitoring, and maintenance. It is easily upgradable for future performance or availability requirements.
 - **Terraform**: An Infrastructure-as-Code (IaC) tool used to define, provision, and manage AWS resources declaratively. Terraform ensures that the infrastructure is reproducible, version-controlled, and can be modified or extended with minimal effort.
 - **GitHub Actions**: Provides the CI/CD pipeline to automatically build, test, and deploy changes to the Node.js WebAPI. When code is pushed to the main branch, the workflow packages the Lambda function, runs tests, and deploys the code to AWS, ensuring fast and reliable updates.
+- **IAM Roles**:
 
 
