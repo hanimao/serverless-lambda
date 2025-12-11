@@ -57,10 +57,7 @@ Running `terraform apply` provisions:
 
 
 1. User requests `GET /` 
-2. API Gateway receives the request and packages it into an **event payload** containing:
-   - HTTP method
-   - Path
-   - Headers
+2. API Gateway receives the request and packages it into an **event payload**
 3. Lambda is invoked with the event payload.  
 4. Lambda inspects `event.requestContext.http.path` and identifies `/`.  
 5. Lambda executes root route logic:
@@ -73,10 +70,7 @@ Running `terraform apply` provisions:
 
 
 1. User requests `GET /health`  
-2. API Gateway receives the request and packages it into an **event payload** containing:
-   - HTTP method
-   - Path
-   - Headers
+2. API Gateway receives the request and packages it into an **event payload**
 3. Lambda is invoked with the event payload.  
 4. Lambda inspects `event.requestContext.http.path` and identifies `/health`.  
 5. Lambda reads database environment variables:DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT, DB_SECRET_ARN
