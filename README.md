@@ -32,10 +32,10 @@ Before using this repository, ensure you have the following installed and config
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
 ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
 
- Configure AWS CLI
+ ## Configure AWS CLI
 
-bash 
-```$ aws configure
+```bash
+$ aws configure
 AWS Access Key ID [None]: accesskey
 AWS Secret Access Key [None]: secretkey
 Default region name [None]: your region
@@ -95,7 +95,7 @@ serverless/
 │       ├── package-lock.json
 │       └── package.json
 ├── .gitignore
-├── .pre-commit-config....
+├── .pre-commit-config
 └── README.md
    
 ```
