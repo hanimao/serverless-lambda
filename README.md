@@ -88,7 +88,7 @@ Running `terraform apply` provisions:
 
 ### API Routes
 
-GET /       --> API Gateway --> Lambda --> Returns Welcome Message
+GET /       --> API Gateway --> Lambda --> Returns Welcome Message  
 GET /health --> API Gateway --> Lambda --> RDS --> Returns DB Status
 
 
