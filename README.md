@@ -16,7 +16,6 @@ This project demonstrates a **serverless Node.js WebAPI** deployed on AWS using 
    - Executes both `/` and `/health` routes
 3. **API Gateway**
    - Routes HTTP requests to Lambda
-   - Supports `/` and `/health`
 4. **RDS SQL Server**
    - Stores application data
    - Used by `/health` route to verify connectivity
@@ -29,10 +28,6 @@ This project demonstrates a **serverless Node.js WebAPI** deployed on AWS using 
 ---
 
 # Directory Structure
-
-The AWS infrastructure was organised into reusable modules to build the infrastructure and this approach promotes the DRY (Don't Repeat Yourself) principle and makes your code scalable and maintainable. Terraform was used to provision the infrastructure, with the state backend securely hosted on AWS S3, enabling reliable tracking. 
-
-
 
 ```text
 
@@ -111,12 +106,11 @@ serverless/
 
 # CI/CD Pipeline
 
-When application code is modified and pushed to GitHub, the CI/CD pipeline automatically updates the Lambda function with the latest version of the code. The process works as follows:
+When application code is modified and pushed to GitHub, the CI/CD pipeline automatically updates the Lambda function with the latest version of the code:
 
 1. A code change is pushed to the GitHub repository.
 - A GitHub Actions workflow is triggered.
 2. Installs Node.js
-- Installs project dependencies
 3. Builds a new deployment.zip file containing the Lambda application code
 4. The pipeline uploads the new ZIP file to the S3 bucket that was created by Terraform during initial setup.
 5. After the ZIP is uploaded, the workflow calls AWS to update the Lambda function’s code, instructing Lambda to pull the latest ZIP from S3.
