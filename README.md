@@ -23,7 +23,7 @@ This repository deploys a Node.js WebAPI and a SQL Server database on AWS. It al
 
 # Workflow 
 
-## Overview
+### Overview
 
 This project demonstrates a **serverless Node.js WebAPI** deployed on AWS using **Terraform**.  
  
@@ -47,7 +47,7 @@ Running `terraform apply` provisions:
    - updates Lambda automatically on code changes 
 
 
-## API Routes
+### API Routes
 
 | Route       | Method | Description |
 |------------|--------|-------------|
@@ -55,7 +55,7 @@ Running `terraform apply` provisions:
 | `/health`  | GET    | Checks SQL Server connectivity and returns status |
 
 
-## Root Route `/`
+### Root Route `/`
 
 
 1. User requests `GET /` 
@@ -68,10 +68,10 @@ Running `terraform apply` provisions:
 5. Lambda executes root route logic:
    - Generates JSON with a greeting and current timestamp.
 6. Lambda returns response to API Gateway.  
-7. API Gateway sends JSON back to the client:
+7. API Gateway sends JSON back to the client
 
 
-## Health Route `/health`
+### Health Route `/health`
 
 
 1. User requests `GET /health`  
@@ -83,18 +83,16 @@ Running `terraform apply` provisions:
 4. Lambda inspects `event.requestContext.http.path` and identifies `/health`.  
 5. Lambda reads database environment variables:DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT, DB_SECRET_ARN
 6. Lambda connects to the RDS SQL Server using the credentials. 
-7. Lambda executes a test query:
+7. Lambda executes a test query
 8. API Gateway returns the JSON response to the client.
 
-## API Routes
+### API Routes
 
-Client
-  │
-  ├─ GET / ──► API Gateway ──► Lambda ──► Returns Welcome Message
-  │
-  └─ GET /health ──► API Gateway ──► Lambda ──► Connects to RDS ──► Returns DB Status
+GET /       --> API Gateway --> Lambda --> Returns Welcome Message
+GET /health --> API Gateway --> Lambda --> RDS --> Returns DB Status
 
-## How code changes are deployed (CI/CD workflow)
+
+### How code changes are deployed (CI/CD workflow)
 
 When application code is modified and pushed to GitHub, the CI/CD pipeline automatically updates the Lambda function with the latest version of the code. The process works as follows:
 
@@ -110,7 +108,7 @@ When application code is modified and pushed to GitHub, the CI/CD pipeline autom
 
 # Getting Started
 
-## Prerequisites 
+### Prerequisites 
 
 Before using this repository, ensure you have the following installed and configured on your machine:
 
@@ -119,7 +117,7 @@ Before using this repository, ensure you have the following installed and config
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
 ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
 
- ## Configure AWS CLI
+ ### Configure AWS CLI
 
 ```bash
 $ aws configure
@@ -135,7 +133,7 @@ Default output format [None]:
 The AWS infrastructure was organised into reusable modules to build the infrastructure and this approach promotes the DRY (Don't Repeat Yourself) principle and makes your code scalable and maintainable. Terraform was used to provision the infrastructure, with the state backend securely hosted on AWS S3, enabling reliable tracking. 
 
 
-## Terraform directory 
+### Terraform directory 
 
 ```text
 
