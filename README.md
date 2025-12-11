@@ -19,7 +19,7 @@ This repository deploys a Node.js WebAPI and a SQL Server database on AWS. It al
 
 ![serverless](images/app.png)
 
-![route2](images/app route 1.png)
+![route2](images/route1.png)
 
 
 # Workflow 
