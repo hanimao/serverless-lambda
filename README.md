@@ -84,11 +84,6 @@ Running `terraform apply` provisions:
 7. Lambda executes a test query
 8. API Gateway returns the JSON response to the client.
 
-### API Routes
-
-GET /       --> API Gateway --> Lambda --> Returns Welcome Message  
-GET /health --> API Gateway --> Lambda --> RDS --> Returns DB Status
-
 
 ### How code changes are deployed (CI/CD workflow)
 
