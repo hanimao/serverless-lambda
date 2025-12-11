@@ -1,24 +1,111 @@
 # Project Overview
 
-This repository deploys a Node.js WebAPI and a SQL Server database on AWS. It also includes a CI/CD pipeline using GitHub Actions to automate deployment of code changes to the API. The infrastructure is designed to be modular, scalable, and extendable for future enhancements. Lambda was used to host the Node.js WebAPI and the API Gateway exposes HTTP endpoints for the Lambda function
+This repository deploys a Node.js WebAPI and a SQL Server database on AWS. It also includes a CI/CD pipeline using GitHub Actions to automate deployment of code changes to the API. The infrastructure is designed to be modular, scalable, and extendable for future enhancements. Lambda was used to host the Node.js WebAPI and the API Gateway exposes HTTP endpoints for the Lambda function. 
 
 
 
 # Table of Contents 
 
 1. [Architecture Diagram](#architecture-diagram) 
-2. [Getting Started](#getting-started)
-3. [Terraform Infrastructure](#terraform-infrastructure)
-4. [Services](#services)
-5. [Workflow Summary](#workflow-summary)
+2. [Workflow](#workflow) 
+3. [Getting Started](#getting-started)
+4. [Terraform Infrastructure](#terraform-infrastructure)
+
 
 
 
 # Architecture Diagram 
 
-![architecture diagram](<images/architecture.drawio.svg>)
+![architecture diagram](<images/lambda.drawio.svg>)
 
 ![serverless](images/app.png)
+
+
+# Workflow 
+
+## Overview
+
+This project demonstrates a **serverless Node.js WebAPI** deployed on AWS using **Terraform**.  
+ 
+
+Running `terraform apply` provisions:
+
+1. **S3 Bucket**
+   - Stores the deployment ZIP (`deployment.zip`) for Lambda
+2. **AWS Lambda Function**
+   - Pulls the deployment ZIP from S3 during first deployment
+   - Executes both `/` and `/health` routes
+3. **API Gateway**
+   - Routes HTTP requests to Lambda
+   - Supports `/` and `/health`
+4. **RDS SQL Server**
+   - Stores application data
+   - Used by `/health` route to verify connectivity
+5. **Security Groups & VPC**
+   - Ensures Lambda and RDS can communicate securely
+6. **GitHub Actions**
+   - updates Lambda automatically on code changes 
+
+
+## API Routes
+
+| Route       | Method | Description |
+|------------|--------|-------------|
+| `/`        | GET    | Returns a welcome message with timestamp |
+| `/health`  | GET    | Checks SQL Server connectivity and returns status |
+
+
+## Root Route `/`
+
+
+1. User requests `GET /` 
+2. API Gateway receives the request and packages it into an **event payload** containing:
+   - HTTP method
+   - Path
+   - Headers
+3. Lambda is invoked with the event payload.  
+4. Lambda inspects `event.requestContext.http.path` and identifies `/`.  
+5. Lambda executes root route logic:
+   - Generates JSON with a greeting and current timestamp.
+6. Lambda returns response to API Gateway.  
+7. API Gateway sends JSON back to the client:
+
+
+## Health Route `/health`
+
+
+1. User requests `GET /health`  
+2. API Gateway receives the request and packages it into an **event payload** containing:
+   - HTTP method
+   - Path
+   - Headers
+3. Lambda is invoked with the event payload.  
+4. Lambda inspects `event.requestContext.http.path` and identifies `/health`.  
+5. Lambda reads database environment variables:DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT, DB_SECRET_ARN
+6. Lambda connects to the RDS SQL Server using the credentials. 
+7. Lambda executes a test query:
+8. API Gateway returns the JSON response to the client.
+
+## API Routes
+
+Client
+  │
+  ├─ GET / ──► API Gateway ──► Lambda ──► Returns Welcome Message
+  │
+  └─ GET /health ──► API Gateway ──► Lambda ──► Connects to RDS ──► Returns DB Status
+
+## How code changes are deployed (CI/CD workflow)
+
+When application code is modified and pushed to GitHub, the CI/CD pipeline automatically updates the Lambda function with the latest version of the code. The process works as follows:
+
+1. A code change is pushed to the GitHub repository.
+- A GitHub Actions workflow is triggered.
+2. Installs Node.js
+- Installs project dependencies
+3. Builds a new deployment.zip file containing the Lambda application code
+4. The pipeline uploads the new ZIP file to the S3 bucket that was created by Terraform during initial setup.
+5. After the ZIP is uploaded, the workflow calls AWS to update the Lambda function’s code, instructing Lambda to pull the latest ZIP from S3.
+6. Lambda immediately switches to the new code, meaning all API Gateway requests (`/` and `/health`) begin using the updated Lambda logic without any downtime.
 
 
 # Getting Started
@@ -42,26 +129,6 @@ Default region name [None]: your region
 Default output format [None]:
 ```
 
-## Clone Repository 
-
-```bash
-git clone <repository-url>
-```
-
-
-## Lambda Deployment zip 
-
-`Install dependencies locally:`
-
-```bash 
-npm install
-```
-
-`Zip the application code and node_modules:`
-
-```bash 
-zip -r deployment.zip .
-```
 
 # Terraform Infrastructure 
 
@@ -101,26 +168,3 @@ serverless/
 ```
 
 
-# Services
-
-
-- **AWS Lambda**: A serverless compute service used to host the Node.js WebAPI. Lambda allows the application to run without provisioning or managing servers. It automatically scales based on traffic, and you only pay for the compute time consumed by your code.
-- **API Gateway v2 (HTTP API)**: Exposes HTTP endpoints for the Lambda function, enabling clients to interact with the WebAPI. API Gateway handles routing, request validation, and security, providing a managed entry point for the API.
-- **Amazon RDS (SQL Server)**: A fully managed relational database service used to store the application’s data. The SQL Server instance is provisioned with standard compute (`db.t3.medium`) and includes automated backups, monitoring, and maintenance. It is easily upgradable for future performance or availability requirements.
-- **Terraform**: An Infrastructure-as-Code (IaC) tool used to define, provision, and manage AWS resources declaratively. Terraform ensures that the infrastructure is reproducible, version-controlled, and can be modified or extended with minimal effort.
-- **GitHub Actions**: Provides the CI/CD pipeline to automatically build, test, and deploy changes to the Node.js WebAPI. When code is pushed to the main branch, the workflow packages the Lambda function, runs tests, and deploys the code to AWS, ensuring fast and reliable updates.
-- **IAM Roles**:
-- **AWS Secrets Manager**: 
-- **Security Group**: 
-- **CloudWatch**:
-
-
-# Workflow Summary
-
-A user accesses the API using a URL. The API Gateway recieves the HTTP request. It determines which route matches ( / or /health). The request is forwaded to the configured AWS Lambda Function. Lambda is invoked with an event payload containing details such as path and method. The function inspects the request path and decides which logic to run. Lambda reads database configuration values (DB host, username, password, name and port) from its environmental variable which are set in Terraform. Lambda attempts to connect to the SQL server instance in Amazon RDS. Lambda runs a SQL query and if successful, Lambda confirms the database is reachable. Lambda reutrns a structured JSON response: 
-
-/ returns a welcome message + timestamp
-
-/health returns API status, timestamp and database connection status
-
-Then API Gateway converts the Lambda response into a standard HTTP response. The user recieves the final JSON output.
