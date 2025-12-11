@@ -17,7 +17,9 @@ This repository deploys a Node.js WebAPI and a SQL Server database on AWS. It al
 
 ![architecture diagram](<images/lambda.drawio.svg>)
 
-![serverless](images/app.png)(images/app route 1.png)
+![serverless](images/app.png)
+
+![route2](images/app route 1.png)
 
 
 # Workflow 
