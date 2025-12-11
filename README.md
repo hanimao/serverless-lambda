@@ -1,16 +1,15 @@
-# Table of Contents 
-
-1. [Project Overview](#project-overview)
-2. [Architecture Diagram](#architecture-diagram) 
-3. [Getting Started](#getting-started)
-4. [Terraform Infrastructure](#terraform-infrastructure)
-5. [Services](#services)
-
-
-
 # Project Overview
 
 This repository deploys a Node.js WebAPI and a SQL Server database on AWS. It also includes a CI/CD pipeline using GitHub Actions to automate deployment of code changes to the API. The infrastructure is designed to be modular, scalable, and extendable for future enhancements. Lambda was used to host the Node.js WebAPI and the API Gateway exposes HTTP endpoints for the Lambda function
+
+
+
+# Table of Contents 
+
+1. [Architecture Diagram](#architecture-diagram) 
+2. [Getting Started](#getting-started)
+3. [Terraform Infrastructure](#terraform-infrastructure)
+4. [Services](#services)
 
 
 
