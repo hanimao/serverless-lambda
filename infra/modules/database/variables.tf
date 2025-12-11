@@ -16,10 +16,6 @@ variable "private_subnet_ids" {
   type = list(string)
 }
 
-# variable "database_name" {
-#   type = string
-# }
-
 variable "master_username" {
   type    = string
   default = "sqladmin"
@@ -36,7 +32,4 @@ variable "instance_class" {
   default = "db.t3.medium"
 }
 
-# variable "security_groups" {
-#   type    = list(string)
-# }
 

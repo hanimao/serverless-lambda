@@ -39,8 +39,6 @@ provider "aws" {
 
 
 
-# This module allows you to create a Github OIDC provider for your AWS account, that will help Github Actions to securely authenticate against the AWS API using an IAM role
-# OIDC Provider for GitHub Actions
 resource "aws_iam_openid_connect_provider" "github" {
   url = "https://token.actions.githubusercontent.com"
 
@@ -56,7 +54,6 @@ resource "aws_iam_openid_connect_provider" "github" {
   }
 }
 
-# IAM Role for GitHub Actions
 resource "aws_iam_role" "github_actions" {
   name = "${var.project_name}-github-actions-role"
 
@@ -87,7 +84,7 @@ resource "aws_iam_role" "github_actions" {
   }
 }
 
-# IAM Policy for GitHub Actions
+
 resource "aws_iam_policy" "github_actions" {
   name        = "${var.project_name}-github-actions-policy"
   description = "Policy for GitHub Actions to manage infrastructure"
