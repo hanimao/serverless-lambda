@@ -10,6 +10,7 @@ This repository deploys a Node.js WebAPI and a SQL Server database on AWS. It al
 2. [Getting Started](#getting-started)
 3. [Terraform Infrastructure](#terraform-infrastructure)
 4. [Services](#services)
+5. [Workflow]](#services)
 
 
 
@@ -109,5 +110,16 @@ serverless/
 - **Terraform**: An Infrastructure-as-Code (IaC) tool used to define, provision, and manage AWS resources declaratively. Terraform ensures that the infrastructure is reproducible, version-controlled, and can be modified or extended with minimal effort.
 - **GitHub Actions**: Provides the CI/CD pipeline to automatically build, test, and deploy changes to the Node.js WebAPI. When code is pushed to the main branch, the workflow packages the Lambda function, runs tests, and deploys the code to AWS, ensuring fast and reliable updates.
 - **IAM Roles**:
+- **AWS Secrets Manager**: 
+- **Security Group**: 
+- **CloudWatch**:
 
 
+# Workflow Summary
+
+A user accesses the API using a URL. The API Gateway recieves the HTTP request. It determines which route matches ( / or /health). The request is forwaded to the configured AWS Lambda Function. Lambda is invoked with an event payload containing details such as path and method. The function inspects the request path and decides which logic to run. Lambda reads database configuration values (DB host, username, password, name and port) from its environmental variable which are set in Terraform. Lambda attempts to connect to the SQL server instance in Amazon RDS. Lambda runs a SQL query and if successful, Lambda confirms the database is reachable. Lambda reutrns a structured JSON response: 
+
+/ returns a welcome message + timestamp
+/health returns API status, timestamp and database connection status
+
+Then API Gateway converts the Lambda response into a standard HTTP response. The user recieves the final JSON output.
