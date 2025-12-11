@@ -13,21 +13,17 @@ This repository deploys a Node.js WebAPI and a SQL Server database on AWS. It al
 
 
 
-
 # Architecture Diagram 
 
 ![architecture diagram](<images/lambda.drawio.svg>)
 
-![serverless](images/app.png)
+![serverless](images/app.png)(images/app route 1.png)
 
 
 # Workflow 
 
-### Overview
-
 This project demonstrates a **serverless Node.js WebAPI** deployed on AWS using **Terraform**.  
  
-
 Running `terraform apply` provisions:
 
 1. **S3 Bucket**
