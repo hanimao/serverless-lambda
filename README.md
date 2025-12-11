@@ -10,7 +10,7 @@ This repository deploys a Node.js WebAPI and a SQL Server database on AWS. It al
 2. [Getting Started](#getting-started)
 3. [Terraform Infrastructure](#terraform-infrastructure)
 4. [Services](#services)
-5. [Workflow]](#services)
+5. [Workflow Summary](workflow-summary)
 
 
 
